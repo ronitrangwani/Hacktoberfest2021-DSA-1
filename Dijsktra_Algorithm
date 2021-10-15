@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define F 9
+
+int minDis(int dist[], bool sptSet[])
+{
+
+	int min = INT_MAX, min_index;
+
+	for (int v = 0; v < F; v++)
+		if (sptSet[v] == false && dist[v] <= min)
+			min = dist[v], min_index = v;
+
+	return min_index;
+}
+
+void print(int dist[])
+{
+	cout <<"Vertex \t Distance from Source" << endl;
+	for (int i = 0; i < F; i++)
+		cout << i << " \t\t"<<dist[i]<< endl;
+}
+
+void dij(int graph[F][F], int src)
+{
+	int dist[F];
+	bool sptSet[F]; 
+	for (int i = 0; i < F; i++)
+		dist[i] = INT_MAX, sptSet[i] = false;
+	dist[src] = 0;
+
+	for (int count = 0; count < F - 1; count++) {
+	
+		int u = minDis(dist, sptSet);
+		sptSet[u] = true;
+		for (int v = 0; v < F; v++)
+			if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX
+				&& dist[u] + graph[u][v] < dist[v])
+				dist[v] = dist[u] + graph[u][v];
+	}
+	print(dist);
+}
+int main()
+{
+
+	int graph[F][F] = { { 0, 5, 0, 0, 0, 0, 0, 8, 0 },
+						{ 1, 0, 2, 0, 0, 0, 0, 14, 0 },
+						{ 0, 2, 0, 8, 0, 4, 0, 0, 1 },
+						{ 0, 0, 7, 0, 9, 1, 0, 0, 0 },
+						{ 0, 0, 0, 9, 0, 11, 0, 0, 0 },
+						{ 0, 0, 4, 14, 10, 0, 21, 0, 0 },
+						{ 0, 0, 0, 0, 0, 2, 0, 2, 2 },
+						{ 3, 1, 0, 0, 0, 0, 1, 0, 2 },
+						{ 0, 0, 9, 0, 0, 0, 1, 3, 0 } };
+
+	dij(graph, 0);
+
+	return 0;
+}
